@@ -34,19 +34,15 @@ const wordCounter = new Transform({
   },
 });
 
-async function run() {
+(async () => {
   try {
     await pipeline(
-      fs.createReadStream('test_app.log', { encoding: 'utf8' }),
+      fs.createReadStream(inputPath, { encoding: 'utf8' }),
       wordCounter,
-      fs.createWriteStream('test_app_indexed.log', {
-        encoding: 'utf8',
-      })
+      fs.createWriteStream(outputPath, { encoding: 'utf8' })
     );
-    console.log('Pipeline succeeded');
-  } catch (err) {
-    console.error('Pipeline failed', err);
+    console.log(`Готово! Результат записан в ${outputPath}`);
+  } catch (e) {
+    console.error('Ошибка конвейера:', e.message);
   }
-}
-
-run();
+})();
