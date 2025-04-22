@@ -25,9 +25,11 @@ const wordCounter = new Transform({
       index[word]++;
     }
 
-    const result = Object.entries(index)
-      .map(([word, count]) => `${word}: ${count}`)
-      .join(', ');
+   // Сортируем слова в алфавитном порядке
+    const sortedWords = Object.keys(wordCounts).sort();
+    
+    // Создаем вектор частот
+    const vector = sortedWords.map(word => wordCounts[word]);
 
     //  Вывести результирующий вектор в файл.
     callback(null, result);
