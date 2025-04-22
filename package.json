@@ -1,0 +1,14 @@
+{
+  "name": "sviatoslav-gerasimov-otus",
+  "version": "1.0.0",
+  "description": "Репозиторий курса Node.js Developer от онлайн-школы OTUS.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
