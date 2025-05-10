@@ -1,0 +1,11 @@
+<%- include('partials/header', { title: 'Главная' , user: typeof user !=='undefined' ? user : null }) %>
+
+  <div class="bg-white rounded-lg shadow p-8 text-center">
+    <h1 class="text-3xl font-bold mb-2">Добро пожаловать!</h1>
+    <p class="mb-4">Найдите интересный курс или создайте свой собственный.</p>
+    <a href="/courses" class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+      Перейти к курсам
+    </a>
+  </div>
+
+  <%- include('partials/footer') %>
