@@ -1,0 +1,21 @@
+<%- include('partials/header', { title: 'Ошибка' , user }) %>
+
+  <div class="bg-white rounded-lg shadow p-8 text-center">
+    <h1 class="text-3xl font-bold mb-3">
+      Ошибка <%= error.status || 500 %>
+    </h1>
+    <p class="mb-2">
+      <%= message %>
+    </p>
+
+    <% if (error.stack) { %>
+      <pre class="text-left text-xs bg-gray-50 p-4 rounded overflow-auto">
+<%= error.stack %></pre>
+      <% } %>
+
+        <a href="/" class="inline-block mt-4 text-blue-600 hover:underline">
+          На главную
+        </a>
+  </div>
+
+  <%- include('partials/footer') %>

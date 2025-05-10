@@ -1,0 +1,28 @@
+<%- include('../partials/header', { title: 'Регистрация' , user: typeof user !=='undefined' ? user : null }) %>
+
+  <h1 class="text-2xl font-semibold text-center mb-6">Регистрация</h1>
+
+  <form method="POST" action="/register" class="bg-white shadow rounded-lg p-6 max-w-sm mx-auto">
+    <label class="block mb-4">
+      <span class="block text-sm font-medium mb-1">Имя</span>
+      <input type="text" name="name" required class="w-full border rounded px-3 py-2">
+    </label>
+    <label class="block mb-4">
+      <span class="block text-sm font-medium mb-1">Email</span>
+      <input type="email" name="email" required class="w-full border rounded px-3 py-2">
+    </label>
+    <label class="block mb-6">
+      <span class="block text-sm font-medium mb-1">Пароль</span>
+      <input type="password" name="password" required class="w-full border rounded px-3 py-2">
+    </label>
+    <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+      Зарегистрироваться
+    </button>
+  </form>
+
+  <p class="text-center mt-4">
+    Уже есть аккаунт?
+    <a href="/login" class="text-blue-600 hover:underline">Войти</a>
+  </p>
+
+  <%- include('../partials/footer') %>
