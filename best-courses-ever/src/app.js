@@ -20,12 +20,12 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // ───────────────── Middlewares ─────────────────
-app.use(morgan('dev')); // цветные HTTP-логи
-app.use(express.json()); // JSON-body → req.body
+app.use(morgan('dev'));
+app.use(express.json());
 app.use(express.urlencoded({ extended: false })); // form-urlencoded
-app.use(cors({ origin: true, credentials: true })); // CORS для фронта
+app.use(cors({ origin: true, credentials: true }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, '..', 'public'))); // /public -> /stylesheets/style.css и пр.
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // ───────────────── Маршруты ─────────────────
 app.use('/', indexRouter);
@@ -51,7 +51,6 @@ app.use((err, req, res, next) => {
     });
   }
 
-  // HTML-страница
   res.render('error', {
     title: 'Ошибка',
     message: err.message,

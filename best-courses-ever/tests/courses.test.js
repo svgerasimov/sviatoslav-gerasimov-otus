@@ -2,7 +2,6 @@ const request = require('supertest');
 const app = require('../src/app');
 const { courseRepo } = require('../src/repositories');
 
-
 describe('Courses API', () => {
   /**
    * Перед каждым тестом очищаем in‑memory‑репозиторий,
@@ -10,9 +9,6 @@ describe('Courses API', () => {
    */
   beforeEach(() => courseRepo._clear());
 
-  /**
-   * 1) Проверяем создание курса
-   */
   it('POST /courses/api → 201 + возвращает объект с id', async () => {
     const res = await request(app)
       .post('/courses/api')
@@ -28,17 +24,12 @@ describe('Courses API', () => {
     expect(res.body.title).toBe('JS Basics');
   });
 
-  /**
-   * 2) Список курсов должен содержать созданный объект
-   */
   it('GET /courses/api → массив содержит ранее созданный курс', async () => {
-    // Arrange: создаём курс напрямую через репозиторий
     const course = courseRepo.create({
       title: 'Node',
       description: 'intro',
       authorId: 2,
     });
-
 
     const res = await request(app).get('/courses/api').expect(200);
 
@@ -46,10 +37,6 @@ describe('Courses API', () => {
     expect(ids).toContain(course.id);
   });
 
-
-  /**
-   * 4) Удаление курса и последующий 404
-   */
   it('DELETE /courses/api/:id → 204, затем 404 при повторном запросе', async () => {
     const { id } = courseRepo.create({
       title: 'To delete',

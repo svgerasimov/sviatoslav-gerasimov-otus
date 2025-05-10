@@ -17,7 +17,6 @@ exports.register = (req, res) => {
 };
 
 exports.login = (req, res) => {
-  // Здесь просто 501 (заглушка)
   res.status(501).json({ message: 'Not implemented' });
 };
 
