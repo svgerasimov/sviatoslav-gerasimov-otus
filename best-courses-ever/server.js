@@ -38,4 +38,4 @@ const server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
-console.log(`Server started on ${port} port`);
+console.log(`🚀 Server started on ${port} port`);

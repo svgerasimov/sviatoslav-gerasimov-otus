@@ -1,50 +1,77 @@
-const { lessonRepo } = require('../repositories');
+const Lesson = require('../models/lesson');
 
-exports.listJSON = (req, res) => {
-  const lessons = lessonRepo.getByCourseId(
-    Number(req.params.courseId)
-  );
-  res.json(lessons);
+exports.listJSON = async (req, res, next) => {
+  try {
+    const lessons = await Lesson.find({ courseId: req.params.courseId }).lean();
+    res.json(lessons);
+  } catch (err) {
+    next(err);
+  }
 };
 
-exports.showJSON = (req, res) => {
-  const lesson = lessonRepo.getById(Number(req.params.lessonId));
-  lesson
-    ? res.json(lesson)
-    : res.status(404).json({ message: 'Lesson not found' });
+exports.showJSON = async (req, res, next) => {
+  try {
+    const lesson = await Lesson.findById(req.params.lessonId).lean();
+    lesson
+      ? res.json(lesson)
+      : res.status(404).json({ message: 'Lesson not found' });
+  } catch (err) {
+    next(err);
+  }
 };
 
-exports.createJSON = (req, res) => {
-  const lesson = lessonRepo.create(
-    Number(req.params.courseId),
-    req.body
-  );
-  res.status(201).json(lesson);
+exports.createJSON = async (req, res, next) => {
+  try {
+    const lesson = await Lesson.create({
+      ...req.body,
+      courseId: req.params.courseId
+    });
+    res.status(201).json(lesson);
+  } catch (err) {
+    next(err);
+  }
 };
 
-exports.updateJSON = (req, res) => {
-  const lesson = lessonRepo.update(
-    Number(req.params.lessonId),
-    req.body
-  );
-  lesson
-    ? res.json(lesson)
-    : res.status(404).json({ message: 'Lesson not found' });
+exports.updateJSON = async (req, res, next) => {
+  try {
+    const lesson = await Lesson.findByIdAndUpdate(
+      req.params.lessonId,
+      req.body,
+      { new: true, runValidators: true }
+    ).lean();
+    lesson
+      ? res.json(lesson)
+      : res.status(404).json({ message: 'Lesson not found' });
+  } catch (err) {
+    next(err);
+  }
 };
 
-exports.deleteJSON = (req, res) => {
-  const lesson = lessonRepo.deleteById(Number(req.params.lessonId));
-  lesson
-    ? res.status(204).end()
-    : res.status(404).json({ message: 'Lesson not found' });
+exports.deleteJSON = async (req, res, next) => {
+  try {
+    const result = await Lesson.findByIdAndDelete(req.params.lessonId);
+    result
+      ? res.status(204).end()
+      : res.status(404).json({ message: 'Lesson not found' });
+  } catch (err) {
+    next(err);
+  }
 };
 
-exports.deleteAllJSON = (req, res) => {
-  lessonRepo.deleteAll();
-  res.status(204).end();
+exports.deleteAllJSON = async (_req, res, next) => {
+  try {
+    await Lesson.deleteMany();
+    res.status(204).end();
+  } catch (err) {
+    next(err);
+  }
 };
 
-exports.deleteByCourseIdJSON = (req, res) => {
-  lessonRepo.deleteByCourseId(Number(req.params.courseId));
-  res.status(204).end();
+exports.deleteByCourseIdJSON = async (req, res, next) => {
+  try {
+    await Lesson.deleteMany({ courseId: req.params.courseId });
+    res.status(204).end();
+  } catch (err) {
+    next(err);
+  }
 };
