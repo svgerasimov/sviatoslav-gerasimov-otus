@@ -1,4 +1,4 @@
-// Главный файл конфигурации Express-приложения в стиле MVC + Tailwind static
+// Главный файл конфигурации Express-приложения в стиле MVC
 
 const express = require('express');
 const path = require('node:path');
@@ -6,14 +6,17 @@ const morgan = require('morgan');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const createError = require('http-errors');
+const connectDB = require('./config/db');
 
 // Роутеры верхнего уровня
+
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
 const coursesRouter = require('./routes/courses');
 
 const app = express();
+connectDB(); // Подключаем БД
 
 // ───────────────── View engine (EJS) ─────────────────
 app.set('views', path.join(__dirname, 'views'));
