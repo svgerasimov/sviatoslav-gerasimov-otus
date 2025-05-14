@@ -1,0 +1,40 @@
+<%- include('../partials/header', { title: course.title, user: typeof user !=='undefined' ? user : null }) %>
+
+  <h1 class="text-3xl font-bold mb-4">
+    <%= course.title %>
+  </h1>
+
+  <section class="bg-white rounded-lg shadow p-6 mb-6">
+    <p class="mb-3"><strong>Описание:</strong>
+      <%= course.description %>
+    </p>
+    <p class="mb-3"><strong>Автор:</strong>
+      <%= author.name %>
+    </p>
+    <p class="mb-3">
+      <strong>Оценка:</strong>
+      <span class="text-amber-500">★ <%= course.rating.toFixed(1) %></span>
+    </p>
+    <p><strong>Сложность:</strong>
+      <%= course.complexity %>
+    </p>
+  </section>
+
+  <h2 class="text-xl font-semibold mb-3">Занятия</h2>
+  <% if (lessons.length===0) { %>
+    <p>Список занятий пуст.</p>
+    <% } %>
+      <ol class="space-y-4 list-decimal list-inside">
+        <% lessons.forEach(l=> { %>
+          <li class="bg-white rounded-lg shadow p-4">
+            <h3 class="font-bold">
+              <%= l.title %>
+            </h3>
+            <p class="text-sm text-gray-600">
+              <%= l.description %>
+            </p>
+          </li>
+          <% }) %>
+      </ol>
+
+      <%- include('../partials/footer') %>
