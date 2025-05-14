@@ -19,9 +19,19 @@ exports.register = async (req, res, next) => {
   }
 };
 
-exports.login = (req, res, next) => {
-  res.status(501).json({ message: 'Not implemented' });
+exports.login = async (req, res, next) => {
+  try {
+    // TODO: implement login logic
+    res.status(501).json({ message: 'Not implemented' });
+  } catch (err) {
+    next(err);
+  }
 };
-exports.logout = (req, res, next) => {
-  res.status(501).json({ message: 'Not implemented' });
+exports.logout = async (req, res, next) => {
+  try {
+    // TODO: implement logout logic
+    res.status(501).json({ message: 'Not implemented' });
+  } catch (err) {
+    next(err);
+  }
 };

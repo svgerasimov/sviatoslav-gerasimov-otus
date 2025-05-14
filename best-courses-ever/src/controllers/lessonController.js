@@ -2,7 +2,9 @@ const Lesson = require('../models/lesson');
 
 exports.listJSON = async (req, res, next) => {
   try {
-    const lessons = await Lesson.find({ courseId: req.params.courseId }).lean();
+    const lessons = await Lesson.find({
+      courseId: req.params.courseId,
+    }).lean();
     res.json(lessons);
   } catch (err) {
     next(err);
@@ -24,7 +26,7 @@ exports.createJSON = async (req, res, next) => {
   try {
     const lesson = await Lesson.create({
       ...req.body,
-      courseId: req.params.courseId
+      courseId: req.params.courseId,
     });
     res.status(201).json(lesson);
   } catch (err) {
@@ -49,7 +51,9 @@ exports.updateJSON = async (req, res, next) => {
 
 exports.deleteJSON = async (req, res, next) => {
   try {
-    const result = await Lesson.findByIdAndDelete(req.params.lessonId);
+    const result = await Lesson.findByIdAndDelete(
+      req.params.lessonId
+    );
     result
       ? res.status(204).end()
       : res.status(404).json({ message: 'Lesson not found' });
