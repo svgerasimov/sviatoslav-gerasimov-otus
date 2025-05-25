@@ -1,24 +1,43 @@
 const express = require('express');
+const Course = require('../models/course');
+const { loadUser, isAuthenticated } = require('../middlewares/auth');
 const router = express.Router();
 
-const { courseRepo } = require('../repositories');
+// Главная страница
+router.get('/', loadUser, async (req, res) => {
+  try {
+    // Получаем популярные курсы для главной
+    const popularCourses = await Course.find({ isPublished: true })
+      .sort('-stats.rating -stats.views')
+      .limit(6)
+      .populate('author', 'name avatar');
 
-router.get('/', (req, res) => {
-  // берём последние 3 курса, чтобы вывести карточки на главной
-  const latestCourses = courseRepo.getAll().slice(-3).reverse();
-  res.render('index', {
-    title: 'Главная',
-    user: req.user,
-    courses: latestCourses,
+    res.render('index', {
+      title: 'Best Courses Ever - Образовательная платформа',
+      popularCourses,
+    });
+  } catch (error) {
+    res.render('index', {
+      title: 'Best Courses Ever - Образовательная платформа',
+      popularCourses: [],
+    });
+  }
+});
+
+// Страница "О нас"
+router.get('/about', loadUser, (req, res) => {
+  res.render('about', {
+    title: 'О платформе',
   });
 });
 
-/**
- * GET /api/health
- * Тестовое «жив?»-API (для мониторинга)
- */
+// Health check для мониторинга
 router.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', ts: Date.now() });
+  res.json({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+  });
 });
 
 module.exports = router;

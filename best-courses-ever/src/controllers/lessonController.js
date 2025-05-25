@@ -1,81 +1,104 @@
+
 const Lesson = require('../models/lesson');
+const Course = require('../models/course');
 
-exports.listJSON = async (req, res, next) => {
-  try {
-    const lessons = await Lesson.find({
-      courseId: req.params.courseId,
-    }).lean();
-    res.json(lessons);
-  } catch (err) {
-    next(err);
-  }
-};
+class LessonController {
+  // Получить все уроки курса
+  async getCourseLessons(req, res, next) {
+    try {
+      const { courseId } = req.params;
 
-exports.showJSON = async (req, res, next) => {
-  try {
-    const lesson = await Lesson.findById(req.params.lessonId).lean();
-    lesson
-      ? res.json(lesson)
-      : res.status(404).json({ message: 'Lesson not found' });
-  } catch (err) {
-    next(err);
-  }
-};
+      // Проверяем существование курса
+      const course = await Course.findById(courseId);
+      if (!course) {
+        return res.status(404).json({
+          success: false,
+          error: 'Курс не найден',
+        });
+      }
 
-exports.createJSON = async (req, res, next) => {
-  try {
-    const lesson = await Lesson.create({
-      ...req.body,
-      courseId: req.params.courseId,
-    });
-    res.status(201).json(lesson);
-  } catch (err) {
-    next(err);
-  }
-};
+      // Проверяем доступ
+      const hasAccess =
+        course.isPublic ||
+        (req.user &&
+          (course.author.toString() === req.user._id.toString() ||
+            course.allowedUsers.includes(req.user._id)));
 
-exports.updateJSON = async (req, res, next) => {
-  try {
-    const lesson = await Lesson.findByIdAndUpdate(
-      req.params.lessonId,
-      req.body,
-      { new: true, runValidators: true }
-    ).lean();
-    lesson
-      ? res.json(lesson)
-      : res.status(404).json({ message: 'Lesson not found' });
-  } catch (err) {
-    next(err);
-  }
-};
+      if (!hasAccess) {
+        return res.status(403).json({
+          success: false,
+          error: 'У вас нет доступа к урокам этого курса',
+        });
+      }
 
-exports.deleteJSON = async (req, res, next) => {
-  try {
-    const result = await Lesson.findByIdAndDelete(
-      req.params.lessonId
-    );
-    result
-      ? res.status(204).end()
-      : res.status(404).json({ message: 'Lesson not found' });
-  } catch (err) {
-    next(err);
-  }
-};
+      // Получаем уроки
+      const lessons = await Lesson.find({ course: courseId })
+        .sort('order')
+        .select('-completedBy'); // Не показываем кто прошел урок
 
-exports.deleteAllJSON = async (_req, res, next) => {
-  try {
-    await Lesson.deleteMany();
-    res.status(204).end();
-  } catch (err) {
-    next(err);
+      res.json({
+        success: true,
+        data: lessons,
+      });
+    } catch (error) {
+      next(error);
+    }
   }
-};
 
-exports.deleteByCourseIdJSON = async (req, res, next) => {
-  try {
-    await Lesson.deleteMany({ courseId: req.params.courseId });
-    res.status(204).end();
-  } catch (err) {
-    next(err);
+  // Создать новый урок
+  async createLesson(req, res, next) {
+    try {
+      const { courseId } = req.params;
+      const {
+        title,
+        description,
+        content,
+        order = 0,
+        duration,
+        isPreview = false,
+      } = req.body;
+
+      // Проверяем существование курса
+      const course = await Course.findById(courseId);
+      if (!course) {
+        return res.status(404).json({
+          success: false,
+          error: 'Курс не найден',
+        });
+      }
+
+      // Проверяем, является ли пользователь автором курса
+      if (
+        course.author.toString() !== req.user._id.toString() &&
+        req.user.role !== 'admin'
+      ) {
+        return res.status(403).json({
+          success: false,
+          error: 'Только автор курса может добавлять уроки',
+        });
+      }
+
+      // Создаем урок
+      const lesson = new Lesson({
+        course: courseId,
+        title,
+        description,
+        content,
+        order,
+        duration,
+        isPreview,
+      });
+
+      await lesson.save();
+
+      res.status(201).json({
+        success: true,
+        data: lesson,
+      });
+    } catch (error) {
+      next(error);
+    }
   }
-};
+}
+
+module.exports = new LessonController();

@@ -1,21 +1,45 @@
-<%- include('partials/header', { title: 'Ошибка' , user }) %>
+<div class="min-h-screen flex items-center justify-center -mt-16">
+  <div class="max-w-md w-full text-center">
+    <!-- Иконка ошибки -->
+    <div class="text-6xl mb-4">
+      <% if (locals.status===404) { %>
+        🔍
+        <% } else if (locals.status===403) { %>
+          🚫
+          <% } else { %>
+            ⚠️
+            <% } %>
+    </div>
 
-  <div class="bg-white rounded-lg shadow p-8 text-center">
-    <h1 class="text-3xl font-bold mb-3">
-      Ошибка <%= error.status || 500 %>
+    <!-- Код ошибки -->
+    <h1 class="text-4xl font-bold text-gray-900 mb-4">
+      <%= locals.status || '500' %>
     </h1>
-    <p class="mb-2">
-      <%= message %>
+
+    <!-- Сообщение об ошибке -->
+    <p class="text-xl text-gray-600 mb-8">
+      <%= message || 'Что-то пошло не так' %>
     </p>
 
-    <% if (error.stack) { %>
-      <pre class="text-left text-xs bg-gray-50 p-4 rounded overflow-auto">
-<%= error.stack %></pre>
+    <!-- Дополнительная информация в режиме разработки -->
+    <% if (locals.error && error.stack) { %>
+      <details class="mb-8 text-left bg-gray-100 rounded-lg p-4">
+        <summary class="cursor-pointer text-sm text-gray-600 hover:text-gray-900">
+          Подробности для разработчика
+        </summary>
+        <pre class="mt-2 text-xs text-gray-500 overflow-x-auto whitespace-pre-wrap"><%= error.stack %></pre>
+      </details>
       <% } %>
 
-        <a href="/" class="inline-block mt-4 text-blue-600 hover:underline">
-          На главную
-        </a>
+        <!-- Кнопки действий -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/" class="inline-block bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700">
+            На главную
+          </a>
+          <button onclick="history.back()"
+            class="inline-block bg-gray-300 text-gray-700 px-6 py-2 rounded hover:bg-gray-400">
+            Назад
+          </button>
+        </div>
   </div>
-
-  <%- include('partials/footer') %>
+</div>

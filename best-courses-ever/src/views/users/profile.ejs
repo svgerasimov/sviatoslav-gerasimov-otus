@@ -1,0 +1,143 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="bg-white shadow rounded-lg">
+    <!-- Шапка профиля -->
+    <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+      <h3 class="text-lg leading-6 font-medium text-gray-900">
+        Мой профиль
+      </h3>
+      <p class="mt-1 max-w-2xl text-sm text-gray-500">
+        Управляйте вашей личной информацией и настройками
+      </p>
+    </div>
+
+    <!-- Форма редактирования профиля -->
+    <form action="/users/profile" method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="_method" value="PUT">
+
+      <div class="px-4 py-5 sm:p-6">
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <!-- Имя -->
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">
+              Имя
+            </label>
+            <input type="text" name="name" id="name" value="<%= user.name %>"
+              class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">
+              Email
+            </label>
+            <input type="email" name="email" id="email" value="<%= user.email %>" disabled
+              class="mt-1 bg-gray-100 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+            <p class="mt-1 text-xs text-gray-500">Email нельзя изменить</p>
+          </div>
+
+          <!-- Биография -->
+          <div class="sm:col-span-2">
+            <label for="bio" class="block text-sm font-medium text-gray-700">
+              О себе
+            </label>
+            <textarea id="bio" name="bio" rows="3"
+              class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+              placeholder="Расскажите немного о себе..."><%= user.bio || '' %></textarea>
+          </div>
+
+          <!-- Аватар -->
+          <div class="sm:col-span-2">
+            <label class="block text-sm font-medium text-gray-700">
+              Фото профиля
+            </label>
+            <div class="mt-1 flex items-center">
+              <span class="inline-block h-12 w-12 rounded-full overflow-hidden bg-gray-100">
+                <% if (user.avatar) { %>
+                  <img src="<%= user.avatar %>" alt="Avatar" class="h-full w-full object-cover">
+                  <% } else { %>
+                    <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                      <path
+                        d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <% } %>
+              </span>
+              <button type="button"
+                class="ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Изменить
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Кнопки действий -->
+      <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+        <button type="submit"
+          class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          Сохранить изменения
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Статистика пользователя -->
+  <div class="mt-8 bg-white shadow rounded-lg">
+    <div class="px-4 py-5 sm:p-6">
+      <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+        Моя статистика
+      </h3>
+
+      <dl class="grid grid-cols-1 gap-5 sm:grid-cols-3">
+        <!-- Роль -->
+        <div class="px-4 py-5 bg-gray-50 shadow rounded-lg overflow-hidden sm:p-6">
+          <dt class="text-sm font-medium text-gray-500 truncate">
+            Роль
+          </dt>
+          <dd class="mt-1 text-3xl font-semibold text-gray-900">
+            <%= user.role==='admin' ? 'Администратор' : user.role==='author' ? 'Автор' : 'Студент' %>
+          </dd>
+        </div>
+
+        <!-- Дата регистрации -->
+        <div class="px-4 py-5 bg-gray-50 shadow rounded-lg overflow-hidden sm:p-6">
+          <dt class="text-sm font-medium text-gray-500 truncate">
+            На платформе с
+          </dt>
+          <dd class="mt-1 text-3xl font-semibold text-gray-900">
+            <%= new Date(user.createdAt).toLocaleDateString('ru-RU', { year: 'numeric' , month: 'short' }) %>
+          </dd>
+        </div>
+
+        <!-- Курсов записано -->
+        <div class="px-4 py-5 bg-gray-50 shadow rounded-lg overflow-hidden sm:p-6">
+          <dt class="text-sm font-medium text-gray-500 truncate">
+            Курсов записано
+          </dt>
+          <dd class="mt-1 text-3xl font-semibold text-gray-900">
+            <%= user.enrolledCourses?.length || 0 %>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+
+  <div class="mt-8 bg-white shadow rounded-lg">
+    <div class="px-4 py-5 sm:p-6">
+      <h3 class="text-lg leading-6 font-medium text-gray-900">
+        Удалить аккаунт
+      </h3>
+      <div class="mt-2 max-w-xl text-sm text-gray-500">
+        <p>
+          После удаления аккаунта все ваши данные будут безвозвратно удалены.
+        </p>
+      </div>
+      <div class="mt-5">
+        <button type="button"
+          class="inline-flex items-center justify-center px-4 py-2 border border-transparent font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm">
+          Удалить аккаунт
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
