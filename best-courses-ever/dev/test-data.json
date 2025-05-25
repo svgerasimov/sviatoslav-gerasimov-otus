@@ -1,0 +1,269 @@
+{
+  "users": [
+    {
+      "_id": "507f1f77bcf86cd799439011",
+      "email": "admin@example.com",
+      "password": "admin123",
+      "name": "Администратор",
+      "role": "admin",
+      "bio": "Администратор платформы Best Courses Ever"
+    },
+    {
+      "_id": "507f1f77bcf86cd799439012",
+      "email": "author1@example.com",
+      "password": "author123",
+      "name": "Иван Петров",
+      "role": "author",
+      "bio": "Опытный разработчик и преподаватель с 10-летним стажем"
+    },
+    {
+      "_id": "507f1f77bcf86cd799439013",
+      "email": "author2@example.com",
+      "password": "author123",
+      "name": "Мария Сидорова",
+      "role": "author",
+      "bio": "UX/UI дизайнер, специалист по Figma и Adobe Creative Suite"
+    },
+    {
+      "_id": "507f1f77bcf86cd799439014",
+      "email": "user1@example.com",
+      "password": "user123",
+      "name": "Алексей Иванов",
+      "role": "user"
+    },
+    {
+      "_id": "507f1f77bcf86cd799439015",
+      "email": "user2@example.com",
+      "password": "user123",
+      "name": "Елена Козлова",
+      "role": "user"
+    }
+  ],
+  "courses": [
+    {
+      "_id": "607f1f77bcf86cd799439021",
+      "title": "JavaScript для начинающих",
+      "description": "Полный курс по JavaScript с нуля до профессионала. Изучите основы языка, работу с DOM, асинхронное программирование, ES6+ и современные фреймворки.",
+      "shortDescription": "Научитесь программировать на JavaScript с полного нуля",
+      "author": "507f1f77bcf86cd799439012",
+      "level": "beginner",
+      "category": "programming",
+      "tags": ["javascript", "web", "frontend", "программирование"],
+      "duration": 2400,
+      "price": 0,
+      "isPublic": true,
+      "isPublished": true,
+      "stats": {
+        "views": 1250,
+        "enrollments": 234,
+        "rating": 4.8,
+        "totalRatings": 89
+      },
+      "prerequisites": [
+        "Базовые знания HTML и CSS",
+        "Желание учиться"
+      ],
+      "learningOutcomes": [
+        "Понимание основ JavaScript",
+        "Работа с DOM и событиями",
+        "Асинхронное программирование",
+        "Современный синтаксис ES6+",
+        "Основы React.js"
+      ]
+    },
+    {
+      "_id": "607f1f77bcf86cd799439022",
+      "title": "Основы UX/UI дизайна",
+      "description": "Научитесь создавать удобные и красивые интерфейсы. Курс охватывает принципы дизайна, работу в Figma, создание дизайн-систем и подготовку макетов для разработки.",
+      "shortDescription": "Станьте UX/UI дизайнером с нуля",
+      "author": "507f1f77bcf86cd799439013",
+      "level": "beginner",
+      "category": "design",
+      "tags": ["дизайн", "ux", "ui", "figma", "интерфейсы"],
+      "duration": 1800,
+      "price": 0,
+      "isPublic": true,
+      "isPublished": true,
+      "stats": {
+        "views": 890,
+        "enrollments": 156,
+        "rating": 4.9,
+        "totalRatings": 67
+      },
+      "prerequisites": [
+        "Компьютер с установленной Figma",
+        "Базовое понимание веб-технологий"
+      ],
+      "learningOutcomes": [
+        "Принципы UX дизайна",
+        "Создание wireframes и прототипов",
+        "Работа в Figma на профессиональном уровне",
+        "Построение дизайн-систем",
+        "Подготовка макетов для разработчиков"
+      ]
+    },
+    {
+      "_id": "607f1f77bcf86cd799439023",
+      "title": "Node.js и Express - создание REST API",
+      "description": "Глубокое погружение в backend-разработку на Node.js. Создадите полноценное REST API с авторизацией, работой с базами данных и деплоем на сервер.",
+      "shortDescription": "Backend-разработка на Node.js",
+      "author": "507f1f77bcf86cd799439012",
+      "level": "intermediate",
+      "category": "programming",
+      "tags": ["nodejs", "express", "backend", "api", "mongodb"],
+      "duration": 3200,
+      "price": 4999,
+      "isPublic": false,
+      "isPublished": true,
+      "allowedUsers": ["507f1f77bcf86cd799439014"],
+      "stats": {
+        "views": 567,
+        "enrollments": 89,
+        "rating": 4.7,
+        "totalRatings": 45
+      },
+      "prerequisites": [
+        "Знание JavaScript",
+        "Понимание основ HTTP",
+        "Базовые знания баз данных"
+      ],
+      "learningOutcomes": [
+        "Создание REST API на Express",
+        "Работа с MongoDB и Mongoose",
+        "JWT авторизация",
+        "Валидация и обработка ошибок",
+        "Деплой приложения"
+      ]
+    },
+    {
+      "_id": "607f1f77bcf86cd799439024",
+      "title": "Алгоритмы и структуры данных",
+      "description": "Фундаментальный курс по алгоритмам. Изучите основные структуры данных, алгоритмы сортировки и поиска, динамическое программирование и подготовьтесь к собеседованиям.",
+      "shortDescription": "Освойте алгоритмы для успешных собеседований",
+      "author": "507f1f77bcf86cd799439012",
+      "level": "advanced",
+      "category": "programming",
+      "tags": ["алгоритмы", "структуры данных", "собеседования", "программирование"],
+      "duration": 4800,
+      "price": 7999,
+      "isPublic": false,
+      "isPublished": true,
+      "stats": {
+        "views": 345,
+        "enrollments": 67,
+        "rating": 4.6,
+        "totalRatings": 34
+      },
+      "prerequisites": [
+        "Уверенное знание хотя бы одного языка программирования",
+        "Базовая математическая подготовка"
+      ],
+      "learningOutcomes": [
+        "Анализ сложности алгоритмов",
+        "Основные структуры данных",
+        "Алгоритмы сортировки и поиска",
+        "Графы и деревья",
+        "Динамическое программирование"
+      ]
+    }
+  ],
+  "lessons": [
+    {
+      "course": "607f1f77bcf86cd799439021",
+      "title": "Введение в JavaScript",
+      "description": "Знакомство с языком, настройка окружения, первая программа",
+      "content": "# Введение в JavaScript\n\nJavaScript - это язык программирования, который изначально был создан для браузера...",
+      "order": 1,
+      "duration": 45,
+      "isPreview": true,
+      "resources": [
+        {
+          "type": "video",
+          "title": "Видео: Введение в JavaScript",
+          "url": "https://example.com/video1.mp4",
+          "duration": 900
+        },
+        {
+          "type": "link",
+          "title": "MDN: Введение в JavaScript",
+          "url": "https://developer.mozilla.org/ru/docs/Web/JavaScript/Guide/Introduction"
+        }
+      ]
+    },
+    {
+      "course": "607f1f77bcf86cd799439021",
+      "title": "Переменные и типы данных",
+      "description": "Изучаем основные типы данных в JavaScript и как работать с переменными",
+      "content": "# Переменные и типы данных\n\n## Объявление переменных\n\nВ JavaScript есть три способа объявить переменную...",
+      "order": 2,
+      "duration": 60,
+      "isPreview": false,
+      "resources": [
+        {
+          "type": "video",
+          "title": "Видео: Переменные в JS",
+          "url": "https://example.com/video2.mp4",
+          "duration": 1200
+        },
+        {
+          "type": "code",
+          "title": "Примеры кода",
+          "content": "// Объявление переменных\nlet name = 'Иван';\nconst age = 25;\nvar city = 'Москва';"
+        }
+      ]
+    },
+    {
+      "course": "607f1f77bcf86cd799439021",
+      "title": "Функции",
+      "description": "Создание и использование функций, стрелочные функции, параметры",
+      "content": "# Функции в JavaScript\n\nФункции - это основные строительные блоки программы...",
+      "order": 3,
+      "duration": 90,
+      "isPreview": false
+    },
+    {
+      "course": "607f1f77bcf86cd799439022",
+      "title": "Что такое UX и UI?",
+      "description": "Разбираемся в терминологии и основных принципах",
+      "content": "# Введение в UX/UI дизайн\n\n## Что такое UX?\n\nUser Experience (UX) - это то, как пользователь взаимодействует с продуктом...",
+      "order": 1,
+      "duration": 30,
+      "isPreview": true
+    },
+    {
+      "course": "607f1f77bcf86cd799439022",
+      "title": "Основы Figma",
+      "description": "Знакомство с интерфейсом Figma, создание первого проекта",
+      "content": "# Работа в Figma\n\nFigma - это мощный инструмент для дизайна интерфейсов...",
+      "order": 2,
+      "duration": 75,
+      "isPreview": false,
+      "resources": [
+        {
+          "type": "video",
+          "title": "Обзор интерфейса Figma",
+          "url": "https://example.com/figma-intro.mp4",
+          "duration": 1800
+        }
+      ]
+    },
+    {
+      "course": "607f1f77bcf86cd799439023",
+      "title": "Настройка окружения Node.js",
+      "description": "Установка Node.js, npm, создание первого проекта",
+      "content": "# Настройка окружения\n\n## Установка Node.js\n\nДля начала работы нам понадобится установить Node.js...",
+      "order": 1,
+      "duration": 45,
+      "isPreview": true
+    },
+    {
+      "course": "607f1f77bcf86cd799439023",
+      "title": "Основы Express.js",
+      "description": "Создание сервера, маршрутизация, middleware",
+      "content": "# Express.js\n\nExpress - это минималистичный веб-фреймворк для Node.js...",
+      "order": 2,
+      "duration": 120,
+      "isPreview": false
+    }
+  ]
+}
