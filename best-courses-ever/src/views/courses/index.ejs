@@ -1,0 +1,177 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Заголовок и фильтры -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-4">Все курсы</h1>
+
+    <!-- Форма поиска и фильтров -->
+    <form method="GET" action="/courses" class="bg-white p-4 rounded-lg shadow-sm">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <!-- Поиск -->
+        <div>
+          <input type="text" name="search" value="<%= locals.filters?.search || '' %>" placeholder="Поиск курсов..."
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+        </div>
+
+        <!-- Уровень -->
+        <div>
+          <select name="level"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+            <option value="">Все уровни</option>
+            <% if (locals.levels) { %>
+              <% levels.forEach(level=> { %>
+                <option value="<%= level %>" <%=locals.filters?.level===level ? 'selected' : '' %>>
+                  <%= level==='beginner' ? 'Начинающий' : level==='intermediate' ? 'Средний' : level==='advanced'
+                    ? 'Продвинутый' : 'Эксперт' %>
+                </option>
+                <% }) %>
+                  <% } %>
+          </select>
+        </div>
+
+        <!-- Категория -->
+        <div>
+          <select name="category"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+            <option value="">Все категории</option>
+            <% if (locals.categories) { %>
+              <% categories.forEach(category=> { %>
+                <option value="<%= category %>" <%=locals.filters?.category===category ? 'selected' : '' %>>
+                  <%= category==='programming' ? 'Программирование' : category==='design' ? 'Дизайн' :
+                    category==='business' ? 'Бизнес' : category==='marketing' ? 'Маркетинг' : 'Другое' %>
+                </option>
+                <% }) %>
+                  <% } %>
+          </select>
+        </div>
+
+        <!-- Кнопка поиска -->
+        <div>
+          <button type="submit"
+            class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition duration-200">
+            Найти
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Сетка курсов -->
+  <% if (locals.courses && courses.length> 0) { %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% courses.forEach(course=> { %>
+        <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 fade-in">
+          <!-- Изображение курса -->
+          <div
+            class="h-48 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-t-lg flex items-center justify-center">
+            <svg class="w-24 h-24 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          </div>
+
+          <!-- Содержимое карточки -->
+          <div class="p-6">
+            <!-- Заголовок -->
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">
+              <a href="/courses/<%= course._id %>" class="hover:text-indigo-600">
+                <%= course.title %>
+              </a>
+            </h3>
+
+            <!-- Автор -->
+            <p class="text-sm text-gray-600 mb-3">
+              Автор: <%= course.author?.name || 'Неизвестный автор' %>
+            </p>
+
+            <!-- Описание -->
+            <p class="text-gray-700 mb-4 line-clamp-3">
+              <%= course.shortDescription || course.description %>
+            </p>
+
+            <!-- Метаданные -->
+            <div class="flex items-center justify-between text-sm text-gray-500">
+              <div class="flex items-center space-x-4">
+                <!-- Уровень -->
+                <span class="flex items-center">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                  <%= course.level==='beginner' ? 'Начинающий' : course.level==='intermediate' ? 'Средний' :
+                    course.level==='advanced' ? 'Продвинутый' : 'Эксперт' %>
+                </span>
+
+                <!-- Рейтинг -->
+                <% if (course.stats && course.stats.rating) { %>
+                  <span class="flex items-center">
+                    <svg class="w-4 h-4 mr-1 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <%= course.stats.rating.toFixed(1) %>
+                  </span>
+                  <% } %>
+              </div>
+
+              <!-- Статус доступа -->
+              <% if (course.hasAccess) { %>
+                <span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">
+                  Доступен
+                </span>
+                <% } else if (course.isPublic) { %>
+                  <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded">
+                    Открытый
+                  </span>
+                  <% } else { %>
+                    <span class="bg-gray-100 text-gray-800 text-xs font-semibold px-2 py-1 rounded">
+                      Платный
+                    </span>
+                    <% } %>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+    </div>
+
+    <!-- Пагинация -->
+    <% if (locals.pagination && pagination.pages> 1) { %>
+      <div class="mt-8 flex justify-center">
+        <nav class="flex space-x-2">
+          <% for (let i=1; i <=pagination.pages; i++) { %>
+            <a href="?page=<%= i %>&search=<%= filters?.search || '' %>&level=<%= filters?.level || '' %>&category=<%= filters?.category || '' %>"
+              class="px-4 py-2 text-sm font-medium <%= pagination.page === i ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50' %> rounded-md border border-gray-300">
+              <%= i %>
+            </a>
+            <% } %>
+        </nav>
+      </div>
+      <% } %>
+        <% } else { %>
+          <!-- Пустое состояние -->
+          <div class="bg-white rounded-lg shadow-sm p-12 text-center">
+            <svg class="w-24 h-24 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+            <h3 class="text-xl font-medium text-gray-900 mb-2">Курсов пока нет</h3>
+            <p class="text-gray-500 mb-6">
+              <% if (locals.filters?.search) { %>
+                По вашему запросу ничего не найдено. Попробуйте изменить параметры поиска.
+                <% } else { %>
+                  Станьте первым, кто создаст курс на нашей платформе!
+                  <% } %>
+            </p>
+            <% if (locals.user && ['author', 'admin' ].includes(user.role)) { %>
+              <a href="/courses/new"
+                class="inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition">
+                Создать первый курс
+              </a>
+              <% } else if (!locals.user) { %>
+                <p class="text-gray-400">
+                  <a href="/register" class="text-indigo-600 hover:underline">Зарегистрируйтесь</a> как автор, чтобы
+                  создавать курсы
+                </p>
+                <% } %>
+          </div>
+          <% } %>
+</div>

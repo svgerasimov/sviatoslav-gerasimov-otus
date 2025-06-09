@@ -1,11 +1,116 @@
-<%- include('partials/header', { title: 'Главная' , user: typeof user !=='undefined' ? user : null }) %>
-
-  <div class="bg-white rounded-lg shadow p-8 text-center">
-    <h1 class="text-3xl font-bold mb-2">Добро пожаловать!</h1>
-    <p class="mb-4">Найдите интересный курс или создайте свой собственный.</p>
-    <a href="/courses" class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
-      Перейти к курсам
-    </a>
+<!-- Главный баннер -->
+<div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
+  <div class="max-w-7xl mx-auto px-4 py-24 sm:px-6 lg:px-8">
+    <div class="text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">
+        Добро пожаловать в Best Courses Ever!
+      </h1>
+      <p class="text-xl mb-8 opacity-90">
+        Откройте для себя мир знаний с нашими онлайн-курсами
+      </p>
+      <div class="space-x-4">
+        <a href="/courses"
+          class="inline-block bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-200">
+          Смотреть курсы
+        </a>
+        <% if (!locals.user) { %>
+          <a href="/register"
+            class="inline-block bg-transparent border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-indigo-600 transition duration-200">
+            Начать бесплатно
+          </a>
+          <% } %>
+      </div>
+    </div>
   </div>
+</div>
 
-  <%- include('partials/footer') %>
+<!-- Популярные курсы -->
+<div class="py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Популярные курсы</h2>
+
+    <% if (locals.popularCourses && popularCourses.length> 0) { %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% popularCourses.forEach(course=> { %>
+          <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden">
+            <div class="h-32 bg-gradient-to-br from-indigo-500 to-purple-600"></div>
+            <div class="p-6">
+              <h3 class="text-xl font-semibold mb-2">
+                <a href="/courses/<%= course._id %>" class="text-gray-900 hover:text-indigo-600 transition-colors">
+                  <%= course.title %>
+                </a>
+              </h3>
+              <p class="text-gray-600 mb-4 line-clamp-2">
+                <%= course.shortDescription || course.description %>
+              </p>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-500">
+                  <%= course.author?.name || 'Автор' %>
+                </span>
+                <span class="text-sm bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full">
+                  <%= course.level==='beginner' ? 'Начинающий' : course.level==='intermediate' ? 'Средний' :
+                    course.level==='advanced' ? 'Продвинутый' : course.level %>
+                </span>
+              </div>
+            </div>
+          </div>
+          <% }) %>
+      </div>
+      <% } else { %>
+        <div class="text-center py-12">
+          <svg class="w-24 h-24 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+          <p class="text-gray-500 text-lg mb-4">Пока нет доступных курсов</p>
+          <% if (locals.user && ['author', 'admin' ].includes(user.role)) { %>
+            <a href="/courses/new"
+              class="inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition">
+              Создать первый курс
+            </a>
+            <% } else { %>
+              <p class="text-gray-400">Скоро здесь появятся интересные курсы!</p>
+              <% } %>
+        </div>
+        <% } %>
+  </div>
+</div>
+
+<!-- Преимущества -->
+<div class="bg-gray-100 py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">Почему выбирают нас</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="text-center">
+        <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-10 h-10 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Качественное образование</h3>
+        <p class="text-gray-600">Курсы от экспертов с многолетним опытом</p>
+      </div>
+      <div class="text-center">
+        <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-10 h-10 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Учитесь онлайн</h3>
+        <p class="text-gray-600">Доступ к материалам 24/7 с любого устройства</p>
+      </div>
+      <div class="text-center">
+        <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-10 h-10 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Сертификаты</h3>
+        <p class="text-gray-600">Получите подтверждение ваших знаний</p>
+      </div>
+    </div>
+  </div>
+</div>
