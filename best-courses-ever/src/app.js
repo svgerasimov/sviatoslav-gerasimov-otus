@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session');
 const path = require('node:path');
 const morgan = require('morgan');
 const cors = require('cors');
@@ -6,9 +7,9 @@ const cookieParser = require('cookie-parser');
 const expressLayouts = require('express-ejs-layouts');
 const connectDB = require('./config/db');
 
-// Импортируем роутеры
+// Роутеры верхнего уровня
 const indexRouter = require('./routes/index');
-const authRouter = require('./routes/auth');
+// const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
 const coursesRouter = require('./routes/courses');
 
@@ -29,42 +30,104 @@ app.set('layout extractStyles', true); // Извлекаем стили из с�
 
 // ===== MIDDLEWARE =====
 app.use(morgan('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+// 1. парсим куки
+app.use(cookieParser());
+// 2. Настраиваем сессии
 app.use(
-  cors({
-    origin: true,
-    credentials: true,
+  session({
+    secret:
+      process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 дней
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Только для HTTPS в продакшене
+      sameSite: 'strict', // Защита от CSRF
+    },
+    name: 'bce.sid', // Имя куки сессии
   })
 );
-app.use(cookieParser());
+// 3. Парсим тело запроса
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+// 4. CORS
+app.use(cors({ origin: true, credentials: true }));
+
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
-// Flash сообщения через куки
+// ===== FLASH СООБЩЕНИЯ через сессии =====
 app.use((req, res, next) => {
-  if (!req.flash) {
-    req.flash = (type, message) => {
-      res.cookie(`flash_${type}`, message, {
-        httpOnly: true,
-        maxAge: 1000 * 60,
-      });
-    };
+  // Инициализируем массив для flash сообщений в сессии
+  if (!req.session.flash) {
+    req.session.flash = {};
   }
 
-  res.locals.messages = {
-    success: req.cookies.flash_success,
-    error: req.cookies.flash_error,
+  // Метод для добавления flash сообщения
+  req.flash = (type, message) => {
+    if (!req.session.flash[type]) {
+      req.session.flash[type] = [];
+    }
+    req.session.flash[type].push(message);
   };
 
-  if (req.cookies.flash_success) res.clearCookie('flash_success');
-  if (req.cookies.flash_error) res.clearCookie('flash_error');
+  // Передаем сообщения в шаблоны и очищаем их
+  res.locals.messages = req.session.flash;
+  req.session.flash = {};
+
+  next();
+});
+
+// Для отладки - выводим информацию о сессиях (только в development)
+if (process.env.NODE_ENV === 'development') {
+  app.use((req, res, next) => {
+    console.log('Session ID:', req.sessionID);
+    console.log('Session Data:', req.session);
+    next();
+  });
+}
+
+// ===== АВТОМАТИЧЕСКАЯ ЗАГРУЗКА ПОЛЬЗОВАТЕЛЯ =====
+app.use(async (req, res, next) => {
+  // Сначала проверяем, есть ли userId в сессии
+  if (!req.session || !req.session.userId) {
+    // Нет сессии или userId - пользователь не авторизован
+    res.locals.user = null;
+    return next();
+  }
+
+  try {
+    // Пробуем загрузить пользователя из базы
+    const User = require('./models/user');
+    const user = await User.findById(req.session.userId).select(
+      '-password'
+    );
+
+    if (user && user.isActive) {
+      // Пользователь найден и активен
+      req.user = user;
+      res.locals.user = user;
+    } else {
+      // Пользователь не найден или заблокирован
+      console.log('User not found or inactive, clearing session');
+      delete req.session.userId;
+      req.user = null;
+      res.locals.user = null;
+    }
+  } catch (error) {
+    console.error('Error loading user:', error);
+    // При ошибке очищаем сессию для безопасности
+    delete req.session.userId;
+    req.user = null;
+    res.locals.user = null;
+  }
 
   next();
 });
 
 // ===== МАРШРУТЫ =====
 app.use('/', indexRouter);
-app.use('/', authRouter);
+// app.use('/', authRouter);
 app.use('/users', usersRouter);
 app.use('/courses', coursesRouter);
 

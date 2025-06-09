@@ -1,10 +1,26 @@
 const express = require('express');
 const Course = require('../models/course');
-const { loadUser, isAuthenticated } = require('../middlewares/auth');
 const router = express.Router();
 
+// Тестовый роут для проверки сессий
+router.get('/test-session', (req, res) => {
+  // Считаем количество посещений
+  if (!req.session.views) {
+    req.session.views = 0;
+  }
+  req.session.views++;
+
+  res.json({
+    sessionId: req.sessionID,
+    views: req.session.views,
+    userId: req.session.userId || 'not logged in',
+    sessionData: req.session,
+  });
+});
+
 // Главная страница
-router.get('/', loadUser, async (req, res) => {
+
+router.get('/', async (req, res) => {
   try {
     // Получаем популярные курсы для главной
     const popularCourses = await Course.find({ isPublished: true })
@@ -25,7 +41,7 @@ router.get('/', loadUser, async (req, res) => {
 });
 
 // Страница "О нас"
-router.get('/about', loadUser, (req, res) => {
+router.get('/about', (req, res) => {
   res.render('about', {
     title: 'О платформе',
   });

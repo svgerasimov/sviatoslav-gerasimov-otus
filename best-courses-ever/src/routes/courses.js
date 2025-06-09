@@ -4,11 +4,6 @@ const router = express.Router();
 const courseController = require('../controllers/courseController');
 const lessonController = require('../controllers/lessonController');
 const {
-  isAuthenticated,
-  hasRole,
-  loadUser,
-} = require('../middlewares/auth');
-const {
   courseRules,
   lessonRules,
   validateObjectId,
@@ -29,13 +24,11 @@ router.get(
 router.get(
   '/:id',
   validateObjectId,
-  loadUser, // Загружаем пользователя если есть
   courseController.getCourse.bind(courseController)
 );
 router.get(
   '/:id/api',
   validateObjectId,
-  loadUser,
   courseController.getCourse.bind(courseController)
 );
 
@@ -43,19 +36,16 @@ router.get(
 // Создание курса - только для авторов и админов
 router.get(
   '/new',
-  hasRole('author', 'admin'),
   courseController.newCoursePage.bind(courseController)
 );
 
 router.post(
   '/',
-  hasRole('author', 'admin'),
   courseRules,
   courseController.createCourse.bind(courseController)
 );
 router.post(
   '/api',
-  hasRole('author', 'admin'),
   courseRules,
   courseController.createCourse.bind(courseController)
 );
@@ -64,7 +54,6 @@ router.post(
 router.get(
   '/:id/edit',
   validateObjectId,
-  isAuthenticated,
   courseController.editCoursePage.bind(courseController)
 );
 
@@ -72,7 +61,6 @@ router.get(
 router.post(
   '/:id',
   validateObjectId,
-  isAuthenticated,
   courseRules,
   courseController.updateCourse.bind(courseController)
 );
@@ -81,7 +69,6 @@ router.post(
 router.put(
   '/:id/api',
   validateObjectId,
-  isAuthenticated,
   courseRules,
   courseController.updateCourse.bind(courseController)
 );
@@ -90,13 +77,11 @@ router.put(
 router.post(
   '/:id/delete',
   validateObjectId,
-  isAuthenticated,
   courseController.deleteCourse.bind(courseController)
 );
 router.delete(
   '/:id/api',
   validateObjectId,
-  isAuthenticated,
   courseController.deleteCourse.bind(courseController)
 );
 
@@ -105,7 +90,6 @@ router.delete(
 router.get(
   '/:courseId/lessons',
   validateObjectId,
-  loadUser,
   lessonController.getCourseLessons
 );
 
@@ -113,7 +97,6 @@ router.get(
 router.post(
   '/:courseId/lessons',
   validateObjectId,
-  isAuthenticated,
   lessonRules,
   lessonController.createLesson
 );

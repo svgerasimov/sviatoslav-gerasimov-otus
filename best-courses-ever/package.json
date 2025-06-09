@@ -31,6 +31,7 @@
     "express": "^5.1.0",
     "express-ejs-layouts": "^2.5.1",
     "express-validator": "^7.2.1",
+    "express-session": "^1.18.1",
     "mongodb": "^6.16.0",
     "mongoose": "^8.14.2",
     "morgan": "^1.10.0",

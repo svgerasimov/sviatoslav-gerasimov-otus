@@ -1,11 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
-const {
-  isAuthenticated,
-  loadUser,
-  hasRole,
-} = require('../middlewares/auth');
+
 const {
   validateObjectId,
   handleValidationErrors,
@@ -13,20 +9,14 @@ const {
 const { body } = require('express-validator');
 
 // Профиль текущего пользователя
-router.get('/profile', isAuthenticated, userController.getProfile);
+router.get('/profile', userController.getProfile);
 
 // Публичный профиль пользователя
-router.get(
-  '/:id',
-  validateObjectId,
-  loadUser,
-  userController.getUser
-);
+router.get('/:id', validateObjectId, userController.getUser);
 
 // Обновление профиля
 router.put(
   '/profile',
-  isAuthenticated,
   [
     body('name')
       .optional()
@@ -44,21 +34,15 @@ router.put(
 );
 
 // Список пользователей (только для админов)
-router.get('/', hasRole('admin'), userController.getAllUsers);
+router.get('/', userController.getAllUsers);
 
 // API endpoints
-router.get('/api', hasRole('admin'), userController.getAllUsers);
+router.get('/api', userController.getAllUsers);
 
-router.get(
-  '/:id/api',
-  validateObjectId,
-  loadUser,
-  userController.getUser
-);
+router.get('/:id/api', validateObjectId, userController.getUser);
 
 router.put(
   '/profile/api',
-  isAuthenticated,
   userController.updateProfile
 );
 
