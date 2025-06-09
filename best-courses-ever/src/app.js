@@ -57,31 +57,36 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // ===== FLASH СООБЩЕНИЯ через сессии =====
 app.use((req, res, next) => {
-  // Инициализируем массив для flash сообщений в сессии
-  if (!req.session.flash) {
-    req.session.flash = {};
-  }
-
-  // Метод для добавления flash сообщения
   req.flash = (type, message) => {
-    if (!req.session.flash[type]) {
-      req.session.flash[type] = [];
-    }
+    req.session.flash = req.session.flash || {};
+    req.session.flash[type] = req.session.flash[type] || [];
     req.session.flash[type].push(message);
   };
 
-  // Передаем сообщения в шаблоны и очищаем их
-  res.locals.messages = req.session.flash;
-  req.session.flash = {};
+  const messages =
+    req.session && req.session.flash ? req.session.flash : {};
+  res.locals.messages = messages;
+
+  if (
+    req.session &&
+    req.session.flash &&
+    Object.keys(req.session.flash).length > 0
+  ) {
+    req.session.flash = {};
+  }
 
   next();
 });
 
-// Для отладки - выводим информацию о сессиях (только в development)
+// Для отладки сессий в dev режиме
 if (process.env.NODE_ENV === 'development') {
   app.use((req, res, next) => {
-    console.log('Session ID:', req.sessionID);
-    console.log('Session Data:', req.session);
+    if (req.session) {
+      console.log('Session exists:', req.sessionID);
+      console.log('Session data:', req.session);
+    } else {
+      console.log('No session');
+    }
     next();
   });
 }
