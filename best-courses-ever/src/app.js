@@ -9,7 +9,7 @@ const connectDB = require('./config/db');
 
 // Роутеры верхнего уровня
 const indexRouter = require('./routes/index');
-// const authRouter = require('./routes/auth');
+const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
 const coursesRouter = require('./routes/courses');
 
@@ -24,9 +24,9 @@ app.set('view engine', 'ejs');
 
 // Настраиваем express-ejs-layouts
 app.use(expressLayouts);
-app.set('layout', 'layout'); // Указываем имя файла layout (по умолчанию layout.ejs)
-app.set('layout extractScripts', true); // Извлекаем скрипты из страниц
-app.set('layout extractStyles', true); // Извлекаем стили из страниц
+app.set('layout', 'layout');
+app.set('layout extractScripts', true);
+app.set('layout extractStyles', true);
 
 // ===== MIDDLEWARE =====
 app.use(morgan('dev'));
@@ -35,8 +35,7 @@ app.use(cookieParser());
 // 2. Настраиваем сессии
 app.use(
   session({
-    secret:
-      process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -109,7 +108,6 @@ app.use(async (req, res, next) => {
       res.locals.user = user;
     } else {
       // Пользователь не найден или заблокирован
-      console.log('User not found or inactive, clearing session');
       delete req.session.userId;
       req.user = null;
       res.locals.user = null;
@@ -127,7 +125,7 @@ app.use(async (req, res, next) => {
 
 // ===== МАРШРУТЫ =====
 app.use('/', indexRouter);
-// app.use('/', authRouter);
+app.use('/', authRouter);
 app.use('/users', usersRouter);
 app.use('/courses', coursesRouter);
 
