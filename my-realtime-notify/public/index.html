@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Demo Notifies</title>
+</head>
+
+<body>
+  <h1>Уведомления в реальном времени</h1>
+  <button id="ask">Разрешить уведомления</button>
+
+  <script>
+    // 1) Просим разрешение у пользователя
+    document.getElementById('ask').onclick = async () => {
+      const perm = await Notification.requestPermission();
+      alert('Статус: ' + perm);
+      if (perm === 'granted') startWorker(); // ➊
+      else if (perm === 'denied') alert('Уведомления запрещены');
+      else alert('Уведомления не поддерживаются');
+    };
+
+    // 2) Запускаем Web Worker
+    function startWorker() {
+        const w = new Worker('./worker.js');
+
+        w.onmessage = (e) => {
+          const { title, body } = e.data;
+          new Notification(title, { body });
+        };
+      }
+  </script>
+</body>
+
+</html>
