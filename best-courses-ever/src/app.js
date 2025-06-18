@@ -63,9 +63,7 @@ app.use((req, res, next) => {
     req.session.flash[type].push(message);
   };
 
-  const messages =
-    req.session && req.session.flash ? req.session.flash : {};
-  res.locals.messages = messages;
+res.locals.messages = req.session?.flash ?? {}
 
   if (
     req.session &&
