@@ -9,7 +9,7 @@ const connectDB = require('./config/db');
 
 // Роутеры верхнего уровня
 const indexRouter = require('./routes/index');
-// const authRouter = require('./routes/auth');
+const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
 const coursesRouter = require('./routes/courses');
 
@@ -24,9 +24,9 @@ app.set('view engine', 'ejs');
 
 // Настраиваем express-ejs-layouts
 app.use(expressLayouts);
-app.set('layout', 'layout'); // Указываем имя файла layout (по умолчанию layout.ejs)
-app.set('layout extractScripts', true); // Извлекаем скрипты из страниц
-app.set('layout extractStyles', true); // Извлекаем стили из страниц
+app.set('layout', 'layout');
+app.set('layout extractScripts', true);
+app.set('layout extractStyles', true);
 
 // ===== MIDDLEWARE =====
 app.use(morgan('dev'));
@@ -35,8 +35,7 @@ app.use(cookieParser());
 // 2. Настраиваем сессии
 app.use(
   session({
-    secret:
-      process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -58,31 +57,34 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // ===== FLASH СООБЩЕНИЯ через сессии =====
 app.use((req, res, next) => {
-  // Инициализируем массив для flash сообщений в сессии
-  if (!req.session.flash) {
-    req.session.flash = {};
-  }
-
-  // Метод для добавления flash сообщения
   req.flash = (type, message) => {
-    if (!req.session.flash[type]) {
-      req.session.flash[type] = [];
-    }
+    req.session.flash = req.session.flash || {};
+    req.session.flash[type] = req.session.flash[type] || [];
     req.session.flash[type].push(message);
   };
 
-  // Передаем сообщения в шаблоны и очищаем их
-  res.locals.messages = req.session.flash;
-  req.session.flash = {};
+res.locals.messages = req.session?.flash ?? {}
+
+  if (
+    req.session &&
+    req.session.flash &&
+    Object.keys(req.session.flash).length > 0
+  ) {
+    req.session.flash = {};
+  }
 
   next();
 });
 
-// Для отладки - выводим информацию о сессиях (только в development)
+// Для отладки сессий в dev режиме
 if (process.env.NODE_ENV === 'development') {
   app.use((req, res, next) => {
-    console.log('Session ID:', req.sessionID);
-    console.log('Session Data:', req.session);
+    if (req.session) {
+      console.log('Session exists:', req.sessionID);
+      console.log('Session data:', req.session);
+    } else {
+      console.log('No session');
+    }
     next();
   });
 }
@@ -109,7 +111,6 @@ app.use(async (req, res, next) => {
       res.locals.user = user;
     } else {
       // Пользователь не найден или заблокирован
-      console.log('User not found or inactive, clearing session');
       delete req.session.userId;
       req.user = null;
       res.locals.user = null;
@@ -127,7 +128,7 @@ app.use(async (req, res, next) => {
 
 // ===== МАРШРУТЫ =====
 app.use('/', indexRouter);
-// app.use('/', authRouter);
+app.use('/', authRouter);
 app.use('/users', usersRouter);
 app.use('/courses', coursesRouter);
 
